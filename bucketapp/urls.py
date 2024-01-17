@@ -12,4 +12,6 @@ urlpatterns = [
     path('create_category/', CategoryClass.as_view(), name='create_category'),
     path('payments/onetime/', OneTimePaymentView.as_view(), name='add_onetime_payment'),
     path('payments/repeated/', RepeatedPaymentView.as_view(), name='add_repeated_payment'),
+    # path('dashboard/summary/'),
+    # path('dashboard/'),
 ]

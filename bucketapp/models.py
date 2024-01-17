@@ -19,7 +19,8 @@ class BasePayment(models.Model):
     budget_id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     source = models.CharField(max_length=100)  # source or name
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    budgeted = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    spent = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     date_received = models.DateField(default=timezone.now)
     description = models.TextField(blank=True)

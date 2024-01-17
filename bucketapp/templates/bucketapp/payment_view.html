@@ -10,15 +10,19 @@
     <tr>
         <th>User</th>
         <th>Source</th>
-        <th>Amount</th>
+        <th>Budgeted</th>
+        <th>Spent</th>
         <!-- ... other fields ... -->
-        <th>Actions</th>
     </tr>
     {% for payment in payment_records %}
     <tr>
         <td>{{ payment.user }}</td>
         <td>{{ payment.source }}</td>
-        <td>{{ payment.amount }}</td>
+        <td>{{ payment.budgeted }}</td>
+        <td>{{ payment.spent }}</td>
+        <td>{{ payment.description }}</td>
+        <td>{{ payment.date_received }}</td>
+
         <!-- ... other fields ... -->
         <td>
             <!-- Add Edit/Delete buttons here -->
