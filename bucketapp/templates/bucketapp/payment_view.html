@@ -1,14 +1,8 @@
 <body>
 <form method="post">
     {% csrf_token %}
-    {{ repeated_form.as_p }}
-    <button type="submit" name="add_repeated">Add Repeated Payment</button>
-</form>
-
-<form method="post">
-    {% csrf_token %}
-    {{ onetime_form.as_p }}
-    <button type="submit" name="add_onetime">Add One-Time Payment</button>
+    {{ payment_form.as_p }}
+    <button type="submit" name={{ payment_name }}>Add Payment</button>
 </form>
 
 <!-- Display Repeated Payments -->
@@ -20,7 +14,7 @@
         <!-- ... other fields ... -->
         <th>Actions</th>
     </tr>
-    {% for payment in repeated_payments %}
+    {% for payment in payment_records %}
     <tr>
         <td>{{ payment.user }}</td>
         <td>{{ payment.source }}</td>

@@ -11,6 +11,9 @@ class Category(models.Model):
     category_name = models.CharField(max_length=15)
     category_privacy = models.BooleanField()
 
+    def __str__(self):
+        return self.category_name
+
 
 class BasePayment(models.Model):
     budget_id = models.BigAutoField(primary_key=True)
