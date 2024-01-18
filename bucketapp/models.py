@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -21,7 +23,7 @@ class Category(models.Model):
 class BasePayment(models.Model):
     budget_id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    source = models.CharField(max_length=100)  # source or name
+    source = models.CharField(max_length=100, default='empty')  # source or name
     spent = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     date_received = models.DateField(default=timezone.now)
@@ -38,8 +40,8 @@ class RepeatedPayment(BasePayment):
         ('M', 'Monthly'),
         ('Y', 'Yearly'),
     ]
-    frequency = models.CharField(max_length=1, choices=FREQUENCY_CHOICES)
-    next_payment_date = models.DateField()
+    frequency = models.CharField(max_length=1, choices=FREQUENCY_CHOICES, default='W')
+    next_payment_date = models.DateField(default=datetime.date.today())
 
 
 class OneTimePayment(BasePayment):

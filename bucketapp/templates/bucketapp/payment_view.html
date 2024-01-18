@@ -4,6 +4,10 @@
 <!--    {{ payment_form.as_p }}-->
 <!--    <button type="submit" name={{ payment_name }}>Add Payment</button>-->
 <!--</form>-->
+<form method="post">
+    {% csrf_token %}
+    <button name="add_new">add new</button>
+</form>
 
 <!-- Display Repeated Payments -->
     <table>

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from .forms import RepeatedPaymentForm
-from ...models import RepeatedPayment, OneTimePayment
+from ...models import RepeatedPayment, OneTimePayment, Category
 from django.http import HttpResponseForbidden
 
 
@@ -23,6 +23,11 @@ class RepeatedPaymentView(LoginRequiredMixin, View):
     @staticmethod
     def post(request):
         print(request.POST)
+        if 'add_new' in request.POST:
+            category_default = Category.objects.filter(category_privacy=False)
+
+            repeated_payment = RepeatedPayment(user=request.user, category=category_default[0])
+            repeated_payment.save()
         if 'repeated_payment' in request.POST:
             form = RepeatedPaymentForm(request.POST)
             if form.is_valid():
