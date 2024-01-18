@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
-from .forms import RepeatedPaymentForm, OneTimePaymentForm
+from .forms import RepeatedPaymentForm
 from ...models import RepeatedPayment, OneTimePayment
 from django.http import HttpResponseForbidden
 
@@ -14,7 +14,6 @@ class RepeatedPaymentView(LoginRequiredMixin, View):
     def get(self, request):
         # Filter payments by the logged-in user
         repeated_payments = RepeatedPayment.objects.filter(user=request.user)
-        onetime_payments = OneTimePayment.objects.filter(user=request.user)
         return render(request, self.template_name, {
             'payment_form': RepeatedPaymentForm(),
             'payment_records': repeated_payments,
@@ -23,6 +22,7 @@ class RepeatedPaymentView(LoginRequiredMixin, View):
 
     @staticmethod
     def post(request):
+        print(request.POST)
         if 'repeated_payment' in request.POST:
             form = RepeatedPaymentForm(request.POST)
             if form.is_valid():

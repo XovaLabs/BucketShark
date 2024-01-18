@@ -1,35 +1,55 @@
 <body>
-<form method="post">
-    {% csrf_token %}
-    {{ payment_form.as_p }}
-    <button type="submit" name={{ payment_name }}>Add Payment</button>
-</form>
+<!--<form method="post">-->
+<!--    {% csrf_token %}-->
+<!--    {{ payment_form.as_p }}-->
+<!--    <button type="submit" name={{ payment_name }}>Add Payment</button>-->
+<!--</form>-->
 
 <!-- Display Repeated Payments -->
-<table>
-    <tr>
-        <th>User</th>
-        <th>Source</th>
-        <th>Budgeted</th>
-        <th>Spent</th>
-        <!-- ... other fields ... -->
-    </tr>
-    {% for payment in payment_records %}
-    <tr>
-        <td>{{ payment.user }}</td>
-        <td>{{ payment.source }}</td>
-        <td>{{ payment.budgeted }}</td>
-        <td>{{ payment.spent }}</td>
-        <td>{{ payment.description }}</td>
-        <td>{{ payment.date_received }}</td>
+    <table>
+        <tr>
+            <th>User</th>
+            <th>Source</th>
+            <th>Budgeted</th>
+            <th>Spent</th>
+            <th>Description</th>
+            <th>Date Added</th>
 
-        <!-- ... other fields ... -->
-        <td>
-            <!-- Add Edit/Delete buttons here -->
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+            <!-- ... other fields ... -->
+
+        {% for payment in payment_records %}
+        </tr>
+            <form method="post">
+                {% csrf_token %}
+                <tr>
+                <td>{{ payment.user }}</td>
+                <td>
+                    <input type="text" name="budgeted_{{ payment.source }}" value="{{ payment.source }}" />
+                </td>
+                <td>
+                    <input type="number" name="budgeted_{{ payment.budgeted }}" value="{{ payment.budgeted }}">
+                </td>
+                <td>
+                    <input type="number" name="budgeted_{{ payment.spent }}" value="{{ payment.spent }}">
+                </td>
+                <td>
+                    <input type="number" name="budgeted_{{ payment.description }}" value="{{ payment.description }}">
+                </td>
+                <td>
+                    <input type="date" name="budgeted_{{ payment.date_received }}" value='{{ payment.date_received|date:"Y/m/d" }}'>
+                </td>
+                <td>
+                    <!-- You can include a save button for each row or a single save button for the entire form -->
+                    <button type="submit" onclick="saveRow({{ payment.id }});">Save</button>
+                </td>
+                <!-- ... other fields ... -->
+                <td>
+                    <!-- Add Edit/Delete buttons here -->
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </table>
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const categorySelect = document.getElementById('id_category');

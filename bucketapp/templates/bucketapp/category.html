@@ -1,0 +1,35 @@
+
+<h1>
+    Categories
+</h1>
+<table>
+    <tr>
+        <th>Category</th>
+        <th>Budgeted</th>
+        <th><a href="{% url 'summary' %}">Spent</a></th>
+        <th>Balance</th>
+    </tr>
+    {% for category in category_records %}
+    <tr>
+        <form method="post">
+            {% csrf_token %}
+            <td>
+                <input type="text" name="name" value="{{ category.category_name }}" />
+            </td>
+            <td>
+                <input type="number" name="budgeted" value="{{ category.budgeted }}" />
+            </td>
+            <td>
+                <a href="{% url 'summary' %}">{{ category.spent }}</a>
+            </td>
+            <td>
+                {{ category.balance }}
+            </td>
+        </form>
+    </tr>
+    {% endfor %}
+</table>
+<form method="post">
+    {% csrf_token %}
+    <button name="add_new">add new</button>
+</form>
