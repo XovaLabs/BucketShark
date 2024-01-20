@@ -2,6 +2,10 @@
 <h1>
     Categories
 </h1>
+<form method="post">
+    {% csrf_token %}
+    <button name="submit" value="add_new">Add new</button>
+</form>
 <table>
     <tr>
         <th>Category</th>
@@ -13,6 +17,7 @@
     <tr>
         <form method="post">
             {% csrf_token %}
+            <input type="hidden" name="id" value="{{ category.category_id }}" />
             <td>
                 <input type="text" name="name" value="{{ category.category_name }}" />
             </td>
@@ -20,16 +25,19 @@
                 <input type="number" name="budgeted" value="{{ category.budgeted }}" />
             </td>
             <td>
-                <a href="{% url 'summary' %}">{{ category.spent }}</a>
+                <a href="{% url 'summary' %}" >{{ category.spent }}</a>
             </td>
             <td>
                 {{ category.balance }}
+            </td>
+            <td>
+                <button name="submit" value="save">Save</button>
+            </td>
+            <td>
+                <button name="submit" value="delete">Delete</button>
             </td>
         </form>
     </tr>
     {% endfor %}
 </table>
-<form method="post">
-    {% csrf_token %}
-    <button name="add_new">add new</button>
-</form>
+

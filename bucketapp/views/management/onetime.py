@@ -1,8 +1,10 @@
+import decimal
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
-from .forms import RepeatedPaymentForm, OneTimePaymentForm
-from ...models import RepeatedPayment, OneTimePayment
+from .forms import OneTimePaymentForm
+from ...models import OneTimePayment, Category
 from django.http import HttpResponseForbidden
 
 
@@ -11,9 +13,62 @@ class OneTimePaymentView(LoginRequiredMixin, View):
         super().__init__(**kwargs)
         self.template_name = 'bucketapp/payment_view.html'
 
+        #  function mapping
+        self.function_mapping = {
+            "save": self.save_payment,
+            "add_new": self.add_new_payment,
+            "delete": self.delete_payment,
+        }
+
+        self.category_update_actions = {
+            "save": self.update_spent_category_saving,
+            "add_new": self.update_spent_category_add,
+            "delete": self.update_spent_category_delete,
+        }
+
+    def save_payment(self, request):
+        print("saved")
+        self.category_update_actions[request.POST['submit']](request)
+
+        record = OneTimePayment.objects.get(pk=request.POST['id'])
+        record.source = request.POST['name']
+        record.spent = request.POST['spent']
+        record.description = request.POST['description']
+        record.date_received = request.POST['date']
+        record.save()
+
+    def add_new_payment(self, request):
+        category_default = Category.objects.filter(category_privacy=False)
+        new_category = OneTimePayment(user=request.user, category=category_default[0])
+        new_category.save()
+
+    def delete_payment(self, request):
+        print("deleted")
+        record = OneTimePayment.objects.get(pk=request.POST['id'])
+        record.delete()
+
+    def update_spent_category_saving(self, request):
+        category = Category.objects.get(pk=request.POST['id'])
+        o_payment = OneTimePayment.objects.get(pk=request.POST['id'])
+        print(o_payment)
+        category.spent = category.spent - o_payment.spent
+        print(category.spent)
+        print(request.POST['spent'])
+        category.spent = category.spent + decimal.Decimal(request.POST['spent'])
+        category.save()
+
+    def update_spent_category_add(self, request):
+        category = Category.objects.get(pk=request.POST['id'])
+        category.spent += request.POST['spent']
+        category.save()
+
+    def update_spent_category_delete(self, request):
+        category = Category.objects.get(pk=request.POST['id'])
+        category.spent -= int(request.POST['spent'])
+        category.save()
+
     def get(self, request):
         # Filter payments by the logged-in user
-        repeated_payments = RepeatedPayment.objects.filter(user=request.user)
         onetime_payments = OneTimePayment.objects.filter(user=request.user)
         return render(request, self.template_name, {
             'payment_form': OneTimePaymentForm(),
@@ -21,31 +76,7 @@ class OneTimePaymentView(LoginRequiredMixin, View):
             'payment_name': 'onetime_payment',
         })
 
-    @staticmethod
-    def post(request):
-        if 'onetime_payment' in request.POST:
-            form = OneTimePaymentForm(request.POST)
-            if form.is_valid():
-                onetime_payment = form.save(commit=False)
-                onetime_payment.user = request.user
-                onetime_payment.save()
-            # Implement logic for edit and delete
-        elif 'edit_payment' in request.POST:
-            # Add your logic here to edit a payment
-            pass
-        elif 'delete_payment' in request.POST:
-            payment_id = request.POST.get('payment_id')
-            payment_type = request.POST.get('payment_type')
-
-            # Check if the payment is owned by the user
-            if payment_type == 'repeated':
-                payment = RepeatedPayment.objects.filter(id=payment_id, user=request.user).first()
-            else:
-                payment = OneTimePayment.objects.filter(id=payment_id, user=request.user).first()
-
-            if payment:
-                payment.delete()
-            else:
-                return HttpResponseForbidden("You do not have permission to delete this payment.")
+    def post(self, request):
+        self.function_mapping[request.POST['submit']](request)
 
         return redirect('add_onetime_payment')

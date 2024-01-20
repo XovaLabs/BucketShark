@@ -10,18 +10,37 @@ class CategoryView(View, LoginRequiredMixin):
         super().__init__(**kwargs)
         self.template_name = 'bucketapp/category.html'
 
+        #  function mapping
+        self.function_mapping = {"save": self.save_category,
+                                 "add_new": self.add_new_category,
+                                 "delete": self.delete_category,
+                                 }
+
+    def save_category(self, request):
+        print("saved")
+        record = Category.objects.get(pk=request.POST['id'])
+        record.category_name = request.POST['name']
+        record.budgeted = request.POST['budgeted']
+        record.save()
+
+    def add_new_category(self, request):
+        new_category = Category(category_user=request.user, category_name='empty',
+                                category_privacy=True)
+        new_category.save()
+
+    def delete_category(self, request):
+        print("deleted")
+        record = Category.objects.get(pk=request.POST['id'])
+        record.delete()
+
     def get(self, request):
         category_records = Category.objects.filter(category_user=request.user)
         return render(request, self.template_name, {
             'category_records': category_records,
         })
 
-    @staticmethod
-    def post(request):
+    def post(self, request):
         print(request.POST)
 
-        if 'add_new' in request.POST:
-            new_category = Category(category_user=request.user, category_name='empty', category_privacy=True)
-            new_category.save()
-
+        self.function_mapping[request.POST['submit']](request)
         return redirect('summary')

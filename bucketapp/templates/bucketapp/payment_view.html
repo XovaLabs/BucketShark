@@ -6,7 +6,7 @@
 <!--</form>-->
 <form method="post">
     {% csrf_token %}
-    <button name="add_new">add new</button>
+    <button name="submit" value="add_new">add new</button>
 </form>
 
 <!-- Display Repeated Payments -->
@@ -14,7 +14,6 @@
         <tr>
             <th>User</th>
             <th>Source</th>
-            <th>Budgeted</th>
             <th>Spent</th>
             <th>Description</th>
             <th>Date Added</th>
@@ -25,26 +24,24 @@
         </tr>
             <form method="post">
                 {% csrf_token %}
+                <input type="hidden" name="id" value="{{ payment.budget_id }}" />
                 <tr>
                 <td>{{ payment.user }}</td>
                 <td>
-                    <input type="text" name="budgeted_{{ payment.source }}" value="{{ payment.source }}" />
+                    <input type="text" name="name" value="{{ payment.source }}" />
                 </td>
                 <td>
-                    <input type="number" name="budgeted_{{ payment.budgeted }}" value="{{ payment.budgeted }}">
+                    <input type="number" name="spent" value="{{ payment.spent }}">
                 </td>
                 <td>
-                    <input type="number" name="budgeted_{{ payment.spent }}" value="{{ payment.spent }}">
+                    <input type="number" name="description" value="{{ payment.description }}">
                 </td>
                 <td>
-                    <input type="number" name="budgeted_{{ payment.description }}" value="{{ payment.description }}">
-                </td>
-                <td>
-                    <input type="date" name="budgeted_{{ payment.date_received }}" value='{{ payment.date_received|date:"Y/m/d" }}'>
+                    <input type="date" name="date" value='{{ payment.date_received|date:"Y-m-d"  }}'>
                 </td>
                 <td>
                     <!-- You can include a save button for each row or a single save button for the entire form -->
-                    <button type="submit" onclick="saveRow({{ payment.id }});">Save</button>
+                    <button name="submit" value="save" type="submit" onclick="saveRow({{ payment.id }});">Save</button>
                 </td>
                 <!-- ... other fields ... -->
                 <td>
