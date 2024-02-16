@@ -1,7 +1,7 @@
 #BucketShark
 
 ## Introduction
-BudgetApp is a user-friendly budgeting application designed to help individuals manage their finances more effectively. Built with Django, this app provides a robust platform for tracking expenses, setting budgets, and analyzing spending habits over time.
+BucketShark is a user-friendly budgeting application designed to help individuals manage their finances more effectively. Built with Django, this app provides a robust platform for tracking expenses, setting budgets, and analyzing spending habits over time.
 
 ## Features
 - **Expense Tracking**: Log and categorize your daily expenses.
@@ -33,7 +33,7 @@ BudgetApp is a user-friendly budgeting application designed to help individuals 
 - Viewing analytics
 
 ## Contributing
-We welcome contributions to BudgetApp. If you would like to contribute, please:
+We welcome contributions to BucketShark. If you would like to contribute, please:
 - Fork the repository
 - Create a new branch for your feature (`git checkout -b feature/AmazingFeature`)
 - Commit your changes (`git commit -m 'Add some AmazingFeature'`)
@@ -41,8 +41,8 @@ We welcome contributions to BudgetApp. If you would like to contribute, please:
 - Open a pull request
 
 ## License
-[MIT License](LICENSE.txt) (or specify another license if applicable)
+[APGL License](LICENSE.txt)
 
 ## Contact
-Your Name - rodrigcp22@gmsil.com
-Project Link: https://github.com/CptDarkrex/BucketShark
+Carlos Rodriguez - rodrigcp22@gmail.com
+Project Link: https://github.com/XovaLabs/BucketShark
