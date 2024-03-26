@@ -22,6 +22,11 @@ class RepeatedPaymentView(LoginRequiredMixin, View):
         record = RepeatedPayment.objects.get(pk=request.POST['id'])
         record.source = request.POST['name']
         record.spent = request.POST['spent']
+
+        category = Category.objects.filter(category_name=request.POST['category'])[0]
+        print("category: ", category)
+        record.category = category
+
         record.description = request.POST['description']
         record.date_received = request.POST['date']
         record.save()
@@ -39,10 +44,12 @@ class RepeatedPaymentView(LoginRequiredMixin, View):
     def get(self, request):
         # Filter payments by the logged-in user
         repeated_payments = RepeatedPayment.objects.filter(user=request.user)
+        categories = Category.objects.filter(category_user=request.user)
         return render(request, self.template_name, {
             'payment_form': RepeatedPaymentForm(),
             'payment_records': repeated_payments,
             'payment_name': 'repeated_payment',
+            'categories': categories,
         })
 
     def post(self, request):

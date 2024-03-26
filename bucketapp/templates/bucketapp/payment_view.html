@@ -15,6 +15,7 @@
             <th>User</th>
             <th>Source</th>
             <th>Spent</th>
+            <th>Category</th>
             <th>Description</th>
             <th>Date Added</th>
 
@@ -32,6 +33,14 @@
                 </td>
                 <td>
                     <input type="number" name="spent" value="{{ payment.spent }}">
+                </td>
+                    <td>
+                    <select type="text" name="category">
+                        <option value="{{ payment.category }}">{{ payment.category.category_name }}</option>
+                        {% for category in categories %}
+                            <option value="{{ category }}">{{ category.category_name }}</option>
+                        {% endfor %}
+                    </select>
                 </td>
                 <td>
                     <input type="number" name="description" value="{{ payment.description }}">

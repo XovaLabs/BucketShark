@@ -20,19 +20,22 @@ class OneTimePaymentView(LoginRequiredMixin, View):
             "delete": self.delete_payment,
         }
 
-        self.category_update_actions = {
-            "save": self.update_spent_category_saving,
-            "add_new": self.update_spent_category_add,
-            "delete": self.update_spent_category_delete,
-        }
+        # self.category_update_actions = {
+        #     "save": self.update_spent_category_saving,
+        #     "add_new": self.update_spent_category_add,
+        #     "delete": self.update_spent_category_delete,
+        # }
 
     def save_payment(self, request):
         print("saved")
-        self.category_update_actions[request.POST['submit']](request)
-
         record = OneTimePayment.objects.get(pk=request.POST['id'])
         record.source = request.POST['name']
         record.spent = request.POST['spent']
+
+        category = Category.objects.filter(category_name=request.POST['category'])[0]
+        print("category: ",category)
+        record.category = category
+
         record.description = request.POST['description']
         record.date_received = request.POST['date']
         record.save()
@@ -47,36 +50,19 @@ class OneTimePaymentView(LoginRequiredMixin, View):
         record = OneTimePayment.objects.get(pk=request.POST['id'])
         record.delete()
 
-    def update_spent_category_saving(self, request):
-        category = Category.objects.get(pk=request.POST['id'])
-        o_payment = OneTimePayment.objects.get(pk=request.POST['id'])
-        print(o_payment)
-        category.spent = category.spent - o_payment.spent
-        print(category.spent)
-        print(request.POST['spent'])
-        category.spent = category.spent + decimal.Decimal(request.POST['spent'])
-        category.save()
-
-    def update_spent_category_add(self, request):
-        category = Category.objects.get(pk=request.POST['id'])
-        category.spent += request.POST['spent']
-        category.save()
-
-    def update_spent_category_delete(self, request):
-        category = Category.objects.get(pk=request.POST['id'])
-        category.spent -= int(request.POST['spent'])
-        category.save()
-
     def get(self, request):
         # Filter payments by the logged-in user
         onetime_payments = OneTimePayment.objects.filter(user=request.user)
+        categories = Category.objects.filter(category_user=request.user)
         return render(request, self.template_name, {
             'payment_form': OneTimePaymentForm(),
             'payment_records': onetime_payments,
             'payment_name': 'onetime_payment',
+            'categories': categories,
         })
 
     def post(self, request):
         self.function_mapping[request.POST['submit']](request)
+        print(request.POST)
 
         return redirect('add_onetime_payment')
