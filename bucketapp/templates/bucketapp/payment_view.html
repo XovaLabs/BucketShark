@@ -1,13 +1,14 @@
 <body>
-<!--<form method="post">-->
-<!--    {% csrf_token %}-->
-<!--    {{ payment_form.as_p }}-->
-<!--    <button type="submit" name={{ payment_name }}>Add Payment</button>-->
-<!--</form>-->
-<form method="post">
-    {% csrf_token %}
-    <button name="submit" value="add_new">add new</button>
-</form>
+    <ul>
+    {% for name, url in u_links.items %}
+        <li><a href="{{ url }}">{{ name }}</a></li>
+    {% endfor %}
+    </ul>
+
+    <form method="post">
+        {% csrf_token %}
+        <button name="submit" value="add_new">add new</button>
+    </form>
 
 <!-- Display Repeated Payments -->
     <table>
@@ -16,6 +17,7 @@
             <th>Source</th>
             <th>Spent</th>
             <th>Category</th>
+            <th>Frequency</th>>
             <th>Description</th>
             <th>Date Added</th>
 
@@ -42,8 +44,16 @@
                         {% endfor %}
                     </select>
                 </td>
+                    <td>
+                    <select type="text" name="frequency">
+                        <option value="{{ payment.frequency }}">{{ payment.frequency}}</option>
+                        {% for frequency in frequencies %}
+                            <option value="{{ frequency }}">{{ frequency }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
                 <td>
-                    <input type="number" name="description" value="{{ payment.description }}">
+                    <input type="text" name="description" value="{{ payment.description }}">
                 </td>
                 <td>
                     <input type="date" name="date" value='{{ payment.date_received|date:"Y-m-d"  }}'>
@@ -60,43 +70,43 @@
         </tr>
         {% endfor %}
     </table>
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const categorySelect = document.getElementById('id_category');
-        const newCategoryInput = document.createElement('input');
-        newCategoryInput.type = 'text';
-        newCategoryInput.id = 'new_category_name';
-        newCategoryInput.style.display = 'none';
-        categorySelect.parentNode.appendChild(newCategoryInput);
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('id_category');
+            const newCategoryInput = document.createElement('input');
+            newCategoryInput.type = 'text';
+            newCategoryInput.id = 'new_category_name';
+            newCategoryInput.style.display = 'none';
+            categorySelect.parentNode.appendChild(newCategoryInput);
 
-        categorySelect.addEventListener('change', function() {
-            if (this.value === 'new') {
-                newCategoryInput.style.display = '';
-            } else {
-                newCategoryInput.style.display = 'none';
-            }
-        });
-
-        newCategoryInput.addEventListener('change', function() {
-            fetch('/path/to/create_category_view/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ category_name: this.value }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const newOption = new Option(data.category_name, data.category_id, true, true);
-                    categorySelect.add(newOption);
+            categorySelect.addEventListener('change', function() {
+                if (this.value === 'new') {
+                    newCategoryInput.style.display = '';
+                } else {
                     newCategoryInput.style.display = 'none';
                 }
             });
+
+            newCategoryInput.addEventListener('change', function() {
+                fetch('/path/to/create_category_view/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ category_name: this.value }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const newOption = new Option(data.category_name, data.category_id, true, true);
+                        categorySelect.add(newOption);
+                        newCategoryInput.style.display = 'none';
+                    }
+                });
+            });
         });
-    });
-</script>
+    </script>
 </body>
 <!-- Similar table for One-Time Payments -->
 

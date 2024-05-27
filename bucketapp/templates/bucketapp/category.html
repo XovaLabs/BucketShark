@@ -1,4 +1,8 @@
-
+<ul>
+    {% for name, url in u_links.items %}
+        <li><a href="{{ url }}">{{ name }}</a></li>
+    {% endfor %}
+    </ul>
 <h1>
     Categories
 </h1>

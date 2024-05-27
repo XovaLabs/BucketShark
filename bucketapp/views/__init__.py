@@ -3,7 +3,7 @@ from .login import LoginClass
 from .signup import SignUpClass
 from .logout import Logout
 from .management import PaymentView, RepeatedPaymentView, OneTimePaymentView, CategoryView
-from .category import CategoryClass
+from .dashboard import Dashboard
 
 __all__ = [
     'Home',
@@ -11,8 +11,8 @@ __all__ = [
     'SignUpClass',
     'Logout',
     'PaymentView',
-    'CategoryClass',
     'RepeatedPaymentView',
     'OneTimePaymentView',
     'CategoryView',
+    'Dashboard',
 ]
