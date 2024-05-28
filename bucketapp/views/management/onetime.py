@@ -1,4 +1,5 @@
 import decimal
+from ..subroutines.p_subroutine import Subroutines
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,6 +13,7 @@ class OneTimePaymentView(LoginRequiredMixin, View):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.template_name = 'bucketapp/payment_view.html'
+        self.subroutines = Subroutines()
 
         #  function mapping
         self.function_mapping = {
@@ -27,6 +29,7 @@ class OneTimePaymentView(LoginRequiredMixin, View):
         # }
 
     def save_payment(self, request):
+
         print("saved")
         record = OneTimePayment.objects.get(pk=request.POST['id'])
         record.source = request.POST['name']
@@ -51,9 +54,10 @@ class OneTimePaymentView(LoginRequiredMixin, View):
         record.delete()
 
     def get(self, request):
-        # Filter payments by the logged-in user
+        # Filter payments by the logged-in user3
         onetime_payments = OneTimePayment.objects.filter(user=request.user)
         categories = Category.objects.filter(category_user=request.user)
+
         return render(request, self.template_name, {
             'payment_form': OneTimePaymentForm(),
             'payment_records': onetime_payments,

@@ -5,6 +5,11 @@
     <title>Title</title>
 </head>
 <body>
+    <ul>
+    {% for name, url in u_links.items %}
+        <li><a href="{{ url }}">{{ name }}</a></li>
+    {% endfor %}
+    </ul>
     <h1>HELLO WORLD!</h1>
     <!-- Conditional links based on user's authentication status -->
             {% if user.is_authenticated %}

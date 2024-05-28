@@ -1,0 +1,92 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>Chart Example</title>-->
+<!--  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--  <canvas id="myChart"></canvas>-->
+<!--  <script>-->
+<!--    var ctx = document.getElementById('myChart').getContext('2d');-->
+<!--    var chartData = {-->
+<!--      labels: ['Expenses'],  // Example labels-->
+<!--      datasets: {{ dataset | safe }}-->
+<!--    };-->
+<!--    var myChart = new Chart(ctx, {-->
+<!--      type: 'bar',  // Make sure this is 'bar' for a bar chart-->
+<!--      data: chartData,-->
+<!--      options: {-->
+<!--        scales: {-->
+<!--          y: {-->
+<!--            beginAtZero: true-->
+<!--          }-->
+<!--        }-->
+<!--      }-->
+<!--    });-->
+<!--  </script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+{% block content %}
+  <h1>Budget</h1>
+
+  <canvas id="category-chart"></canvas>
+  <canvas id="account-balance-chart"></canvas>
+
+  <script>
+    const categoryChartData = {
+      labels: {% for category in categories %}'{{ category.category_name }}', {% endfor %},
+      datasets: [{
+        label: 'Spent',
+        data: [
+          {% for category, spent in category_spent.items %}{{ spent }}, {% endfor %}
+        ],
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    };
+
+    const categoryChartConfig = {
+      type: 'bar',
+      data: categoryChartData,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    };
+
+    const accountBalanceChartData = {
+      labels: ['Account Balance'],
+      datasets: [{
+        label: 'Account Balance',
+        data: [{% for balance in estimated_account_balance %}{{ balance }}, {% endfor %}],
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
+    };
+
+    const accountBalanceChartConfig = {
+      type: 'line',
+      data: accountBalanceChartData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    };
+
+    const categoryChart = new Chart(document.getElementById('category-chart'), categoryChartConfig);
+    const accountBalanceChart = new Chart(document.getElementById('account-balance-chart'), accountBalanceChartConfig);
+  </script>
+{% endblock %}

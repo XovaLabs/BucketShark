@@ -5,7 +5,7 @@ from ...models import RepeatedPayment, OneTimePayment, Category
 class RepeatedPaymentForm(forms.ModelForm):
     class Meta:
         model = RepeatedPayment
-        fields = '__all__'
+        fields = ['budget_id', 'user', 'source', 'spent', 'category', 'date_received', 'frequency', 'next_payment_date']
         exclude = ['user']
 
     def __init__(self, *args, **kwargs):
