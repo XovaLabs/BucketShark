@@ -1,31 +1,29 @@
 from django.urls import reverse
 from django.conf import settings
 
-def map():
-    map = {
+
+def get_links():
+    links = {
         "authenticated": {
-        'Home': reverse('home'),
-        'Log out': reverse('logout'),
-        'Ontime Payment': reverse('add_onetime_payment'),
-        'Repeated Payment': reverse('add_repeated_payment'),
-        'Summary': reverse('summary'),
-    },
+            'Home': reverse('home'),
+            'Log out': reverse('logout'),
+            'Onetime Payment': reverse('add_onetime_payment'),
+            'Repeated Payment': reverse('add_repeated_payment'),
+            'Summary': reverse('summary'),
+        },
         "unauthenticated": {
-            "Home": reverse('home')
+            'Home': reverse('home'),
+            'Log in': reverse('login'),
         }
     }
-def get_uni_acess_links(request):
+    return links
 
-    #  TODO: Logout button should be only visible if logged in. log in button should be visible if not logged in.
-    #   The payment views should only be visible if the user is currently logged in.
-    #   If the user is not logged they should only see home and login.
-    uni_access_links_dict = {
 
-        'Home': reverse('home'),
-        'Log out': reverse('logout'),
-        'Ontime Payment': reverse('add_onetime_payment'),
-        'Repeated Payment': reverse('add_repeated_payment'),
-        'Summary': reverse('summary'),
-    }
+def get_uni_access_links(request):
+    links = get_links()
+    if request.user.is_authenticated:
+        access_links = links["authenticated"]
+    else:
+        access_links = links["unauthenticated"]
 
-    return {'u_links': uni_access_links_dict}
+    return {'u_links': access_links}
