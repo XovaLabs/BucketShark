@@ -6,7 +6,7 @@ BucketShark is a user-friendly budgeting application designed to help individual
 ## Features
 - **Expense Tracking**: Log and categorize your daily expenses.
 - **Budget Setting**: Set monthly or weekly budgets for different categories.
-- **Analytics**: View charts and graphs to analyze spending patterns.
+- **Analytics**: View charts and graphs to analyze spending patterns. (WIP)
 - **User Accounts**: Personalized accounts with secure authentication.
 - **Responsive Design**: Accessible on both desktop and mobile devices.
 
@@ -14,7 +14,7 @@ BucketShark is a user-friendly budgeting application designed to help individual
 - Django
 - Python
 - HTML/CSS
-- JavaScript (Optional: mention any specific libraries or frameworks used)
+- JavaScript
 - SQLite/PostgreSQL
 
 ## Installation and Setup
@@ -22,7 +22,7 @@ BucketShark is a user-friendly budgeting application designed to help individual
 2. Navigate to the project directory: `cd bucketshark_pr`
 3. Install dependencies: `pip install -r requirements.txt`
 4. Migrate the database: `python manage.py migrate`
-5. Create a superuser: `python manage.py createsuperuser`
+5. Create a superuser: `python manage.py createsuperuser` (not needed but you can)
 6. Run the server: `python manage.py runserver`
 7. Access the app in a web browser at `localhost:8000`
 
