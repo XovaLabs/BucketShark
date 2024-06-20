@@ -1,47 +1,74 @@
-<ul>
-    {% for name, url in u_links.items %}
-        <li><a href="{{ url }}">{{ name }}</a></li>
-    {% endfor %}
-    </ul>
-<h1>
-    Categories
-</h1>
-<form method="post">
-    {% csrf_token %}
-    <button name="submit" value="add_new">Add new</button>
-</form>
-<table>
-    <tr>
-        <th>Category</th>
-        <th>Budgeted</th>
-        <th><a href="{% url 'summary' %}">Spent</a></th>
-        <th>Balance</th>
-    </tr>
-    {% for category in category_records %}
-    <tr>
-        <form method="post">
-            {% csrf_token %}
-            <input type="hidden" name="id" value="{{ category.category_id }}" />
-            <td>
-                <input type="text" name="name" value="{{ category.category_name }}" />
-            </td>
-            <td>
-                <input type="number" name="budgeted" value="{{ category.budgeted }}" />
-            </td>
-            <td>
-                <a href="{% url 'summary' %}" >{{ category.spent }}</a>
-            </td>
-            <td>
-                {{ category.balance }}
-            </td>
-            <td>
-                <button name="submit" value="save">Save</button>
-            </td>
-            <td>
-                <button name="submit" value="delete">Delete</button>
-            </td>
-        </form>
-    </tr>
-    {% endfor %}
-</table>
 
+{% extends 'bucketapp/reusable/header.html' %}
+{% block page %}Categories{% endblock %}
+
+{% block content %}
+<!-- Display Repeated Payments -->
+<div class="container">
+  <div class="page-inner">
+    <div class="page-header">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Categories</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+                <form method="post">
+                    {% csrf_token %}
+                    <button name="submit" value="add_new">Add new</button>
+                </form>
+              <table id="multi-filter-select" class="display table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Budgeted</th>
+                        <th><a href="{% url 'summary' %}">Spent</a></th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Category</th>
+                        <th>Budgeted</th>
+                        <th><a href="{% url 'summary' %}">Spent</a></th>
+                        <th>Balance</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for category in category_records %}
+                        <tr>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{ category.category_id }}" />
+                                <td>
+                                    <input type="text" name="name" value="{{ category.category_name }}" />
+                                </td>
+                                <td>
+                                    <input type="number" name="budgeted" value="{{ category.budgeted }}" />
+                                </td>
+                                <td>
+                                    <a href="{% url 'summary' %}" >{{ category.spent }}</a>
+                                </td>
+                                <td>
+                                    {{ category.balance }}
+                                </td>
+                                <td>
+                                    <button name="submit" value="save">Save</button>
+                                </td>
+                                <td>
+                                    <button name="submit" value="delete">Delete</button>
+                                </td>
+                            </form>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

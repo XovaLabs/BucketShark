@@ -1,10 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title0</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>BucketShark</title>
+  {% load static %}
+  <meta
+    content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    name="viewport"
+  />
+  <link
+    rel="icon"
+    href="{% static 'img/kaiadmin/favicon.ico' %}"
+    type="image/x-icon"
+  />
+
+
+  <!-- Fonts and icons -->
+  <script src="{% static 'js/plugin/webfont/webfont.min.js' %}"></script>
+  <script>
+    WebFont.load({
+      google: { families: ["Public Sans:300,400,500,600,700"] },
+      custom: {
+        families: [
+          "Font Awesome 5 Solid",
+          "Font Awesome 5 Regular",
+          "Font Awesome 5 Brands",
+          "simple-line-icons",
+        ],
+        urls: ["assets/css/fonts.min.css"],
+      },
+      active: function () {
+        sessionStorage.fonts = true;
+      },
+    });
+  </script>
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/plugins.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/kaiadmin.min.css' %}" />
+
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link rel="stylesheet" href="{% static 'css/demo.css' %}" />
+
+  {% block extras %}
+  {% endblock %}
+
 </head>
 <body>
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+      <div class="sidebar-logo">
+        <!-- Logo Header -->
+        <div class="logo-header" data-background-color="dark">
+          <a href="index.html" class="logo">
+            <img
+              src="{% static 'img/kaiadmin/logo_light.svg' %}"
+              alt="navbar brand"
+              class="navbar-brand"
+              height="20"
+            />
+          </a>
+          <div class="nav-toggle">
+            <button class="btn btn-toggle toggle-sidebar">
+              <i class="gg-menu-right"></i>
+            </button>
+            <button class="btn btn-toggle sidenav-toggler">
+              <i class="gg-menu-left"></i>
+            </button>
+          </div>
+          <button class="topbar-toggler more">
+            <i class="gg-more-vertical-alt"></i>
+          </button>
+        </div>
+        <!-- End Logo Header -->
 
+      </div>
+      <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+          <ul class="nav nav-secondary">
+            <li class="nav-item active">
+              <a data-bs-toggle="collapse" href="#dashboard" class="collapsed"
+                aria-expanded="false">
+                <i class="fas fa-home"></i>
+                <p>{% block page%} {% endblock %}</p>
+                <span class="caret"></span>
+              </a>
+
+              <div class="collapse" id="dashboard">
+                <ul class="nav nav-collapse">
+                  {% for name, url in u_links.items %}
+                    <li><a href="{{ url }}">{{ name }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+  </div>
+    {% block content %}
+        <!-- Default content can go here -->
+    {% endblock %}
+    <!-- End Sidebar -->
+    <!--   Core JS Files   -->
+  <script src="{% static 'js/core/jquery-3.7.1.min.js' %}"></script>
+  <script src="{% static 'js/core/popper.min.js' %}"></script>
+  <script src="{% static 'js/core/bootstrap.min.js' %}"></script>
+
+  <!-- jQuery Scrollbar -->
+  <script src="{% static 'js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+
+  <!-- Chart JS -->
+  <script src="{% static 'js/plugin/chart.js/chart.min.js' %}"></script>
+
+  <!-- jQuery Sparkline -->
+  <script src="{% static 'js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+
+  <!-- Chart Circle -->
+  <script src="{% static 'js/plugin/chart-circle/circles.min.js' %}"></script>
+
+  <!-- Datatables -->
+  <script src="{% static 'js/plugin/datatables/datatables.min.js' %}"></script>
+
+  <!-- Bootstrap Notify -->
+  <script src="{% static 'js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+
+  <!-- jQuery Vector Maps -->
+  <script src="{% static 'js/plugin/jsvectormap/jsvectormap.min.js' %}"></script>
+  <script src="{% static 'js/plugin/jsvectormap/world.js' %}"></script>
+
+  <!-- Sweet Alert -->
+  <script src="{% static 'js/plugin/sweetalert/sweetalert.min.js' %}"></script>
+
+  <!-- Kaiadmin JS -->
+  <script src="{% static 'js/kaiadmin.min.js' %}"></script>
 </body>
 </html>

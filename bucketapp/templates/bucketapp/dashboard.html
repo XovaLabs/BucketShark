@@ -1,92 +1,181 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--  <meta charset="UTF-8">-->
-<!--  <title>Chart Example</title>-->
-<!--  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
-<!--</head>-->
-<!--<body>-->
-<!--  <canvas id="myChart"></canvas>-->
-<!--  <script>-->
-<!--    var ctx = document.getElementById('myChart').getContext('2d');-->
-<!--    var chartData = {-->
-<!--      labels: ['Expenses'],  // Example labels-->
-<!--      datasets: {{ dataset | safe }}-->
-<!--    };-->
-<!--    var myChart = new Chart(ctx, {-->
-<!--      type: 'bar',  // Make sure this is 'bar' for a bar chart-->
-<!--      data: chartData,-->
-<!--      options: {-->
-<!--        scales: {-->
-<!--          y: {-->
-<!--            beginAtZero: true-->
-<!--          }-->
-<!--        }-->
-<!--      }-->
-<!--    });-->
-<!--  </script>-->
-<!--</body>-->
-<!--</html>-->
+{% extends 'bucketapp/reusable/header.html' %}
 
+{% block extras%}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock%}
+
+{% block page %}Dashboard{% endblock %}
 
 {% block content %}
-  <h1>Budget</h1>
+<!--<canvas id="myChart" width="400" height="400"></canvas>-->
+<!--<script>-->
+<!--    const colors = {{ colors|safe }};-->
+<!--document.addEventListener('DOMContentLoaded', function () {-->
+<!--    const ctx = document.getElementById('myChart').getContext('2d');-->
+<!--    const data = {-->
+<!--        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],-->
+<!--        datasets: [-->
+<!--            {% for payment in dataset %}-->
+<!--            {-->
+<!--                label: '{{ payment.label }}',-->
+<!--                data: {{ payment.data|safe }},-->
+<!--                borderColor: colors[{{ forloop.counter0 }}],-->
+<!--                backgroundColor: colors[{{ forloop.counter0 }}] + '33', // Adding '33' for transparency-->
+<!--                borderWidth: 1-->
+<!--            },-->
+<!--            {% endfor %}-->
+<!--        ]-->
+<!--    };-->
+<!--    const myChart = new Chart(ctx, {-->
+<!--        type: 'line',-->
+<!--        data: data,-->
+<!--        options: {-->
+<!--            scales: {-->
+<!--                y: {-->
+<!--                    beginAtZero: true-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+<!--    });-->
+<!--});-->
 
-  <canvas id="category-chart"></canvas>
-  <canvas id="account-balance-chart"></canvas>
+        <div class="container">
+  <div class="page-inner">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Accounts Trend</div>
+          </div>
+          <div class="card-body">
+            <div class="card-sub">
+              This is a space for a chatgpt generated summary of spending. only a concept.
+            </div>
+            <div class="chart-container">
+              <canvas id="htmlLegendsChart"></canvas>
+            </div>
+            <div id="myChartLegend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <script>
-    const categoryChartData = {
-      labels: {% for category in categories %}'{{ category.category_name }}', {% endfor %},
-      datasets: [{
-        label: 'Spent',
-        data: [
-          {% for category, spent in category_spent.items %}{{ spent }}, {% endfor %}
-        ],
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
-      }]
-    };
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    const categoryChartConfig = {
-      type: 'bar',
-      data: categoryChartData,
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+<script>
+    var htmlLegendsChart = document.getElementById("htmlLegendsChart").getContext("2d");
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const colors = {{ colors|safe }};
+        const dataset = [
+            {% for payment in dataset %}
+            {
+                label: '{{ payment.label }}',
+                data: {{ payment.data|safe }},
+                borderColor: colors[{{ forloop.counter0 }}],
+                backgroundColor: colors[{{ forloop.counter0 }}] + '33', // Adding '33' for transparency
+                legendColor: colors[{{ forloop.counter0 }}], // Adding color for the legend
+                borderWidth: 1
+            },
+            {% endfor %}
+        ];
+
+        var myHtmlLegendsChart = new Chart(htmlLegendsChart, {
+            type: "line",
+            data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                datasets: dataset
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    bodySpacing: 4,
+                    mode: "nearest",
+                    intersect: 0,
+                    position: "nearest",
+                    xPadding: 10,
+                    yPadding: 10,
+                    caretPadding: 10,
+                },
+                layout: {
+                    padding: { left: 15, right: 15, top: 15, bottom: 15 },
+                },
+                scales: {
+                    yAxes: [
+                        {
+                            ticks: {
+                                fontColor: "rgba(0,0,0,0.5)",
+                                fontStyle: "500",
+                                beginAtZero: false,
+                                maxTicksLimit: 5,
+                                padding: 20,
+                            },
+                            gridLines: {
+                                drawTicks: false,
+                                display: false,
+                            },
+                        },
+                    ],
+                    xAxes: [
+                        {
+                            gridLines: {
+                                zeroLineColor: "transparent",
+                            },
+                            ticks: {
+                                padding: 20,
+                                fontColor: "rgba(0,0,0,0.5)",
+                                fontStyle: "500",
+                            },
+                        },
+                    ],
+                },
+                legendCallback: function (chart) {
+                    var text = [];
+                    text.push('<ul class="' + chart.id + '-legend html-legend">');
+                    for (var i = 0; i < chart.data.datasets.length; i++) {
+                        text.push(
+                            '<li><span style="background-color:' +
+                            chart.data.datasets[i].legendColor +
+                            '"></span>'
+                        );
+                        if (chart.data.datasets[i].label) {
+                            text.push(chart.data.datasets[i].label);
+                        }
+                        text.push("</li>");
+                    }
+                    text.push("</ul>");
+                    return text.join("");
+                },
+            },
+        });
+
+        var myLegendContainer = document.getElementById("myChartLegend");
+
+        // generate HTML legend
+        myLegendContainer.innerHTML = myHtmlLegendsChart.generateLegend();
+
+        // bind onClick event to all LI-tags of the legend
+        var legendItems = myLegendContainer.getElementsByTagName("li");
+        for (var i = 0; i < legendItems.length; i += 1) {
+            legendItems[i].addEventListener("click", function () {
+                var index = Array.prototype.slice.call(legendItems).indexOf(this);
+                var ci = myHtmlLegendsChart;
+                var meta = ci.getDatasetMeta(index);
+
+                // See controller.isDatasetVisible comment
+                meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+
+                // We hid a dataset ... rerender the chart
+                ci.update();
+            }, false);
         }
-      }
-    };
+    });
+</script>
 
-    const accountBalanceChartData = {
-      labels: ['Account Balance'],
-      datasets: [{
-        label: 'Account Balance',
-        data: [{% for balance in estimated_account_balance %}{{ balance }}, {% endfor %}],
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1
-      }]
-    };
-
-    const accountBalanceChartConfig = {
-      type: 'line',
-      data: accountBalanceChartData,
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    };
-
-    const categoryChart = new Chart(document.getElementById('category-chart'), categoryChartConfig);
-    const accountBalanceChart = new Chart(document.getElementById('account-balance-chart'), accountBalanceChartConfig);
-  </script>
 {% endblock %}

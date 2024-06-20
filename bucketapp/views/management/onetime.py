@@ -29,12 +29,12 @@ class OneTimePaymentView(LoginRequiredMixin, View):
         Retrieves the record from the database and updates it with form data.
         """
         print("saved")
-        record = OneTimePayment.objects.get(pk=request.POST['id'])  # Get the payment record by ID
+        record = OneTimePayment.objects.get(budget_id=request.POST['id'])  # Get the payment record by ID
         record.source = request.POST['name']  # Update source name
         record.spent = request.POST['spent']  # Update amount spent
 
         # Get the category from the database
-        category = Category.objects.filter(category_name=request.POST['category'])[0]
+        category = Category.objects.get(category_id=request.POST['category'])
         print("category: ", category)
         record.category = category  # Update category
 
@@ -55,7 +55,7 @@ class OneTimePaymentView(LoginRequiredMixin, View):
         Subroutine to delete a one-time payment based on form data.
         """
         print("deleted")
-        record = OneTimePayment.objects.get(pk=request.POST['id'])  # Get the payment record by ID
+        record = OneTimePayment.objects.get()  # Get the payment record by ID
         record.delete()  # Delete the record
 
     def get(self, request):
@@ -71,6 +71,7 @@ class OneTimePaymentView(LoginRequiredMixin, View):
             'payment_records': onetime_payments,  # Payment records
             'payment_name': 'onetime_payment',  # Payment name
             'categories': categories,  # Category records
+            'payment_type': "Onetime Payments",
         })
 
     def post(self, request):

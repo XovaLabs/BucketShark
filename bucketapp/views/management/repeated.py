@@ -25,12 +25,13 @@ class RepeatedPaymentView(LoginRequiredMixin, View):
         Retrieves the record from the database and updates it with form data.
         """
         print("saved")
-        record = RepeatedPayment.objects.get(pk=request.POST['id'])  # Get the payment record by ID
+        record = RepeatedPayment.objects.get(budget_id=request.POST['id'])  # Get the payment record by ID
         record.source = request.POST['name']  # Update source name
         record.spent = request.POST['spent']  # Update amount spent
 
         # Get the category from the database
-        category = Category.objects.filter(category_name=request.POST['category'])[0]
+        print(request.POST)
+        category = Category.objects.get(category_id=request.POST['category'])
         print("category: ", category)
         record.category = category  # Update category
         print(request.POST['frequency'])
@@ -53,7 +54,7 @@ class RepeatedPaymentView(LoginRequiredMixin, View):
         Subroutine to delete a category based on form data.
         """
         print("deleted")
-        record = RepeatedPayment.objects.get(pk=request.POST['id'])  # Get the payment record by ID
+        record = RepeatedPayment.objects.get()  # Get the payment record by ID
         record.delete()  # Delete the record
 
     def get(self, request):
@@ -61,8 +62,10 @@ class RepeatedPaymentView(LoginRequiredMixin, View):
         Handle GET requests to display the payment view.
         Filters payments and categories by the logged-in user and renders the template.
         """
+        print(request.POST)
         repeated_payments = RepeatedPayment.objects.filter(user=request.user)  # Get user's repeated payments
         categories = Category.objects.filter(category_user=request.user)  # Get user's categories
+
         frequencies = ["D", "W", "M", "Y"]  # Possible frequencies
         return render(request, self.template_name, {
             'payment_form': RepeatedPaymentForm(),  # Payment form instance
@@ -70,6 +73,7 @@ class RepeatedPaymentView(LoginRequiredMixin, View):
             'payment_name': 'repeated_payment',  # Payment name
             'categories': categories,  # Category records
             'frequencies': frequencies,  # Frequency options
+            'payment_type': "Repeated Payments",
         })
 
     def post(self, request):

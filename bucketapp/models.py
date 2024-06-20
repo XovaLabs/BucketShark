@@ -61,3 +61,4 @@ class RepeatedPayment(BasePayment):
 class OneTimePayment(BasePayment):
     # Model for one-time payments, inheriting from BasePayment
     pass  # No additional fields needed for one-time payments
+

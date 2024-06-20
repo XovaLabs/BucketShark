@@ -1,75 +1,107 @@
-<body>
-    <ul>
-    {% for name, url in u_links.items %}
-        <li><a href="{{ url }}">{{ name }}</a></li>
-    {% endfor %}
-    </ul>
 
-    <form method="post">
-        {% csrf_token %}
-        <button name="submit" value="add_new">add new</button>
-    </form>
+{% extends 'bucketapp/reusable/header.html' %}
+{% block page %}{{ payment_type }}{% endblock %}
+
+{% block content %}
+
 
 <!-- Display Repeated Payments -->
-    <table>
-        <tr>
-            <th>User</th>
-            <th>Source</th>
-            <th>Spent</th>
-            <th>Category</th>
-            <th>Frequency</th>>
-            <th>Description</th>
-            <th>Date Added</th>
-
-            <!-- ... other fields ... -->
-
-        {% for payment in payment_records %}
-        </tr>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="id" value="{{ payment.budget_id }}" />
+<div class="container">
+  <div class="page-inner">
+    <div class="page-header">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">{{ payment_type }}</h4>
+          </div>
+          <div class="card-body">
+              <form method="post">
+                  {% csrf_token %}
+                  <button name="submit" value="add_new">add new</button>
+              </form>
+            <div class="table-responsive">
+              <table id="multi-filter-select" class="display table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Source</th>
+                        <th>Spent</th>
+                        <th>Category</th>
+                        <th>Frequency</th>>
+                        <th>Description</th>
+                        <th>Date Added</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>User</th>
+                        <th>Source</th>
+                        <th>Spent</th>
+                        <th>Category</th>
+                        <th>Frequency</th>>
+                        <th>Description</th>
+                        <th>Date Added</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                {% for payment in payment_records %}
                 <tr>
-                <td>{{ payment.user }}</td>
-                <td>
-                    <input type="text" name="name" value="{{ payment.source }}" />
-                </td>
-                <td>
-                    <input type="number" name="spent" value="{{ payment.spent }}">
-                </td>
-                    <td>
-                    <select type="text" name="category">
-                        <option value="{{ payment.category }}">{{ payment.category.category_name }}</option>
-                        {% for category in categories %}
-                            <option value="{{ category }}">{{ category.category_name }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                    <td>
-                    <select type="text" name="frequency">
-                        <option value="{{ payment.frequency }}">{{ payment.frequency}}</option>
-                        {% for frequency in frequencies %}
-                            <option value="{{ frequency }}">{{ frequency }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td>
-                    <input type="text" name="description" value="{{ payment.description }}">
-                </td>
-                <td>
-                    <input type="date" name="date" value='{{ payment.date_received|date:"Y-m-d"  }}'>
-                </td>
-                <td>
-                    <!-- You can include a save button for each row or a single save button for the entire form -->
-                    <button name="submit" value="save" type="submit" onclick="saveRow({{ payment.id }});">Save</button>
-                </td>
-                <!-- ... other fields ... -->
-                <td>
-                    <!-- Add Edit/Delete buttons here -->
-                </td>
-            </form>
-        </tr>
-        {% endfor %}
-    </table>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ payment.budget_id }}" />
+                        <tr>
+                        <td>{{ payment.user }}</td>
+                        <td>
+                            <input type="text" name="name" value="{{ payment.source }}" />
+                        </td>
+                        <td>
+                            <input type="number" name="spent" value="{{ payment.spent }}">
+                        </td>
+                            <td>
+                            <select name="category">
+                                <option value="{{ payment.category.category_id }}">{{ payment.category.category_name }}</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.category_id }}">{{ category.category_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                            <td>
+                            <select type="text" name="frequency">
+                                <option value="{{ payment.frequency }}">{{ payment.frequency}}</option>
+                                {% for frequency in frequencies %}
+                                    <option value="{{ frequency }}">{{ frequency }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="description" value="{{ payment.description }}">
+                        </td>
+                        <td>
+                            <input type="date" name="date" value='{{ payment.date_received|date:"Y-m-d"  }}'>
+                        </td>
+                        <td>
+                            <!-- You can include a save button for each row or a single save button for the entire form -->
+                            <button name="submit" value="save" type="submit" onclick="saveRow({{ payment.id }});">Save</button>
+                        </td>
+                        <!-- ... other fields ... -->
+                        <td>
+                            <!-- Add Edit/Delete buttons here -->
+                        </td>
+                    </form>
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function() {
             const categorySelect = document.getElementById('id_category');
@@ -107,6 +139,63 @@
             });
         });
     </script>
-</body>
+<script>
+  $(document).ready(function () {
+    $("#basic-datatables").DataTable({});
+
+    $("#multi-filter-select").DataTable({
+      pageLength: 5,
+      initComplete: function () {
+        this.api()
+          .columns()
+          .every(function () {
+            var column = this;
+            var select = $(
+              '<select class="form-select"><option value=""></option></select>'
+            )
+              .appendTo($(column.footer()).empty())
+              .on("change", function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                column
+                  .search(val ? "^" + val + "$" : "", true, false)
+                  .draw();
+              });
+
+            column
+              .data()
+              .unique()
+              .sort()
+              .each(function (d, j) {
+                select.append(
+                  '<option value="' + d + '">' + d + "</option>"
+                );
+              });
+          });
+      },
+    });
+
+    // Add Row
+    $("#add-row").DataTable({
+      pageLength: 5,
+    });
+
+    var action =
+      '<td> <div class="form-button-action"> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task"> <i class="fa fa-edit"></i> </button> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove"> <i class="fa fa-times"></i> </button> </div> </td>';
+
+    $("#addRowButton").click(function () {
+      $("#add-row")
+        .dataTable()
+        .fnAddData([
+          $("#addName").val(),
+          $("#addPosition").val(),
+          $("#addOffice").val(),
+          action,
+        ]);
+      $("#addRowModal").modal("hide");
+    });
+  });
+</script>
+{% endblock %}
 <!-- Similar table for One-Time Payments -->
 

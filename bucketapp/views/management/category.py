@@ -26,7 +26,7 @@ class CategoryView(View, LoginRequiredMixin):
         '''
         print("saved")
         # Retrieve the category record to be updated based on the primary key from POST data
-        record = Category.objects.get(pk=request.POST['id'])
+        record = Category.objects.get(category_id=request.POST['id'])
         # Update the category name and budgeted fields from POST data
         record.category_name = request.POST['name']
         record.budgeted = request.POST['budgeted']
@@ -48,7 +48,7 @@ class CategoryView(View, LoginRequiredMixin):
         '''
         print("deleted")
         # Retrieve the category record to be deleted based on the primary key from POST data
-        record = Category.objects.get(pk=request.POST['id'])
+        record = Category.objects.get(category_id=request.POST['id'])
         # Delete the record from the database
         record.delete()
 

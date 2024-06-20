@@ -14,6 +14,7 @@ def get_links():
         "unauthenticated": {
             'Home': reverse('home'),
             'Log in': reverse('login'),
+            'Sign Up': reverse('signup')
         }
     }
     return links
