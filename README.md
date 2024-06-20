@@ -32,6 +32,12 @@ BucketShark is a user-friendly budgeting application designed to help individual
 - Setting a budget
 - Viewing analytics
 
+## 404 Page? WHAT!?!?
+If you are seeing a 404 page when following the link: http://127.0.0.1:8000/
+this is because the home/landing page has been deprecated until further notice.
+Please use this link to access the app: http://127.0.0.1:8000/login/
+
+
 ## Contributing
 We welcome contributions to BucketShark. If you would like to contribute, please:
 - Fork the repository

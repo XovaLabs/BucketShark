@@ -5,14 +5,13 @@ from django.conf import settings
 def get_links():
     links = {
         "authenticated": {
-            'Home': reverse('home'),
             'Log out': reverse('logout'),
             'Onetime Payment': reverse('add_onetime_payment'),
             'Repeated Payment': reverse('add_repeated_payment'),
             'Summary': reverse('summary'),
         },
         "unauthenticated": {
-            'Home': reverse('home'),
+            # 'Home': reverse('home'),
             'Log in': reverse('login'),
             'Sign Up': reverse('signup')
         }
