@@ -13,7 +13,7 @@ class SignUpClass(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('home')  # Redirect to the home page
+            return redirect('dashboard')  # Redirect to the home page
 
         return render(request, self.template_name)
 
@@ -30,7 +30,7 @@ class SignUpClass(View):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home')  # Redirect to home page or dashboard
+                return redirect('dashboard')  # Redirect to home page or dashboard
             else:
                 # Return an 'invalid login' error message
                 messages.error(request, 'Unable to log in with the provided credentials.')

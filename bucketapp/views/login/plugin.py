@@ -23,7 +23,7 @@ class LoginClass(View):
             if user is not None:
                 login(request, user)
                 # Session is created here
-                return redirect('home')  # Redirect to a success page.
+                return redirect('dashboard')  # Redirect to a success page.
             else:
                 # Invalid login
                 return render(request, 'login.html', {'form': form})
