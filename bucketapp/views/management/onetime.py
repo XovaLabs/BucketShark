@@ -46,8 +46,8 @@ class OneTimePaymentView(LoginRequiredMixin, View):
         """
         Subroutine to add a new one-time payment for the user.
         """
-        category_default = Category.objects.filter(category_privacy=False)  # Get default categories
-        new_category = OneTimePayment(user=request.user, category=category_default[0])  # Create new payment record
+        category_default = Category.objects.filter(category_user_id=request.user.id) # Get default categories
+        new_category = OneTimePayment(user=request.user, category=category_default)  # Create new payment record
         new_category.save()  # Save new payment to the database
 
     def delete_payment(self, request):

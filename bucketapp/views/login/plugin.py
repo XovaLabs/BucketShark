@@ -8,7 +8,7 @@ class LoginClass(View):
     @staticmethod
     def get(request):
         if request.user.is_authenticated:
-            return redirect('home')  # Redirect to the home page
+            return redirect('dashboard')  # Redirect to the home page
 
         form = AuthenticationForm()
         return render(request, 'bucketapp/login.html', {'form': form})
